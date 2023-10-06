@@ -1,18 +1,21 @@
 import concurrent.futures
 from multiprocessing import cpu_count
-from floor_func_sync import timer
+from datetime import datetime
 
-@timer
+
 def factorize(number):
-    return [el for el in range(1, number+1) if (number % el) == 0]
+    return [el for el in range(1, number + 1) if (number % el) == 0]
 
 
 arguments = (128, 255, 99999, 10651060)
 
 if __name__ == '__main__':
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=cpu_count()) as executor:
+    start = datetime.now().timestamp()
+    with concurrent.futures.ProcessPoolExecutor(max_workers=cpu_count()) as executor:
         a, b, c, d = list(executor.map(factorize, arguments))
+    print(datetime.now().timestamp()-start)
+
+
 
     assert a == [1, 2, 4, 8, 16, 32, 64, 128]
     assert b == [1, 3, 5, 15, 17, 51, 85, 255]
